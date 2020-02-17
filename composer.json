@@ -1,0 +1,30 @@
+{
+    "name": "tomaszgasior/create-symfony-project",
+    "description": "Composer plugin providing command for creating new projects based on Symfony framework.",
+    "type": "composer-plugin",
+    "license": "MIT",
+    "authors": [{
+        "name": "Tomasz Gąsior",
+        "homepage": "https://tomaszgasior.pl"
+    }],
+    "require": {
+        "composer-plugin-api": "^1.1",
+        "symfony/http-client": "^5.0"
+    },
+    "require-dev": {
+        "composer/composer": "^1.9",
+        "symfony/console": "^4.0",
+        "symfony/var-dumper": "^5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mushrooms\\CreateSymfonyProject\\": "src/"
+        }
+    },
+    "extra": {
+        "class": "Mushrooms\\CreateSymfonyProject\\Composer\\Plugin"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
