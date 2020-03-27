@@ -43,6 +43,7 @@ class CreateProjectCommand extends BaseCommand
                 $opt('stable', 'Use latest non-LTS stable Symfony release'),
                 $opt('current', 'Use latest non-LTS stable Symfony release'),
                 $opt('next', 'Use next in-development Symfony release, not for production'),
+                $opt('unstable', 'Use next in-development Symfony release, not for production'),
                 $opt('minimal', 'Use plain symfony/skeleton (default)'),
                 $opt('full', 'Use full-stack symfony/website-skeleton'),
                 $opt('website', 'Use full-stack symfony/website-skeleton'),
@@ -121,6 +122,7 @@ class CreateProjectCommand extends BaseCommand
                 return $this->versionApi->getVersionOfRelease(Release::STABLE);
 
             case $input->getOption('next'):
+            case $input->getOption('unstable'):
                 return $this->versionApi->getVersionOfRelease(Release::NEXT);
 
             case $input->getOption('lts'):
@@ -140,6 +142,7 @@ class CreateProjectCommand extends BaseCommand
                 return null;
 
             case $input->getOption('next'):
+            case $input->getOption('unstable'):
                 return $format($version) . '@dev';
 
             default:
