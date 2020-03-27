@@ -11,6 +11,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CreateProjectCommand extends BaseCommand
 {
@@ -52,14 +53,45 @@ class CreateProjectCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $version = $this->getVersion($input);
+        $package = $this->getPackage($input);
+        $packageVersion = $this->getPackageVersion($input, $version);
+        $directory = $input->getArgument('directory');
+
+        $io = new SymfonyStyle($input, $output);
+        $application = $this->getApplication();
+
+        $innerCommand = $application->find('create-project');
         $innerInput = new ArrayInput([
             'command' => 'create-project',
-            'package' => $this->getPackage($input),
-            'directory' => $input->getArgument('directory'),
-            'version' => $this->getVersion($input),
-        ]);
+            'package' => $package,
+            'directory' => $directory,
+        ] + ($packageVersion ? ['version' => $packageVersion] : []));
 
-        return $this->getApplication()->run($innerInput, $output);
+        $output->writeln(sprintf('Running <options=bold>composer %s</>', $innerInput));
+
+        $interactive = $input->isInteractive();
+        $verbosity = $output->getVerbosity();
+
+        if (false === $output->isVerbose()) {
+            $input->setInteractive(false);
+            $innerInput->setInteractive(false);
+            $output->setVerbosity(OutputInterface::VERBOSITY_QUIET);
+        }
+        $innerCommand->run($innerInput, $output);
+
+        $input->setInteractive($interactive);
+        $output->setVerbosity($verbosity);
+
+        $io->success(
+            sprintf(
+                'Symfony %s is ready to use in "%s" directory.',
+                (Skeleton::DEMO === $package) ? 'demo application' : $version,
+                $directory,
+            )
+        );
+
+        return 0;
     }
 
     private function getPackage(InputInterface $input): string
@@ -80,25 +112,38 @@ class CreateProjectCommand extends BaseCommand
 
     private function getVersion(InputInterface $input): ?string
     {
-        if ($input->getOption('demo')) {
-            return null;
-        }
+        switch (true) {
+            case $input->getOption('demo'):
+                return null;
 
+            case $input->getOption('current'):
+            case $input->getOption('stable'):
+                return $this->versionApi->getVersionOfRelease(Release::STABLE);
+
+            case $input->getOption('next'):
+                return $this->versionApi->getVersionOfRelease(Release::NEXT);
+
+            case $input->getOption('lts'):
+            default:
+                return $this->versionApi->getVersionOfRelease(Release::LTS);
+        }
+    }
+
+    private function getPackageVersion(InputInterface $input, ?string $version): ?string
+    {
         $format = function(string $version): string {
             return preg_filter('/^([0-9]+\.[0-9]+)(.*)/', '$1.*', $version);
         };
 
         switch (true) {
-            case $input->getOption('current'):
-            case $input->getOption('stable'):
-                return $format($this->versionApi->getVersionOfRelease(Release::STABLE));
+            case $input->getOption('demo'):
+                return null;
 
             case $input->getOption('next'):
-                return $format($this->versionApi->getVersionOfRelease(Release::NEXT)) . '@dev';
+                return $format($version) . '@dev';
 
-            case $input->getOption('lts'):
             default:
-                return $format($this->versionApi->getVersionOfRelease(Release::LTS));
+                return $format($version);
         }
     }
 }
