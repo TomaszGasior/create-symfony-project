@@ -32,6 +32,7 @@ class CreateProjectCommand extends BaseCommand
 
         $this
             ->setName('create-symfony-project')
+            ->setAliases(['symfony-new', 'new-symfony', 'sf-new'])
             ->setDescription('Creates new Symfony project from official skeleton.')
             ->setDefinition([
                 new InputArgument(
