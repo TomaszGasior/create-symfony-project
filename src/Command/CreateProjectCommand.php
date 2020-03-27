@@ -44,6 +44,7 @@ class CreateProjectCommand extends BaseCommand
                 $opt('next', 'Use next in-development Symfony release, not for production'),
                 $opt('minimal', 'Use plain symfony/skeleton (default)'),
                 $opt('full', 'Use full-stack symfony/website-skeleton'),
+                $opt('website', 'Use full-stack symfony/website-skeleton'),
                 $opt('demo', 'Use latest demo application from symfony/demo'),
             ])
         ;
@@ -65,6 +66,7 @@ class CreateProjectCommand extends BaseCommand
     {
         switch (true) {
             case $input->getOption('full'):
+            case $input->getOption('website'):
                 return Skeleton::FULL;
 
             case $input->getOption('demo'):
