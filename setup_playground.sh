@@ -17,10 +17,9 @@ printf '{
     }
 }' $PROJECT_DIR > composer.json
 
-curl -s https://getcomposer.org/download/latest-2.x/composer.phar > composer-2
-curl -s https://getcomposer.org/download/latest-1.x/composer.phar > composer-1
-chmod +x composer-2 composer-1
+curl -s https://getcomposer.org/download/latest-2.x/composer.phar > composer
+chmod +x composer
 
 echo 'Playground folder:   '$PLAYGROUND_DIR
-echo 'How to install:      rm -rfv vendor/ composer.lock && ./composer-2 install'
-echo 'How to test command: ./composer-2 create-symfony-project […]'
+echo 'How to install:      rm -rfv vendor/ composer.lock && ./composer install'
+echo 'How to test command: ./composer create-symfony-project […]'
