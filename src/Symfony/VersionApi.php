@@ -26,7 +26,7 @@ class VersionApi
         }
 
         $validate = function(string $version): string {
-            if (!preg_match('/^[0-9]+\.[0-9]+\.[0-9]+$/', $version)) {
+            if (!preg_match('/^[0-9]+\.[0-9]+\.[0-9]+(-DEV|)$/', $version)) {
                 throw new \UnexpectedValueException;
             }
 
