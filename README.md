@@ -2,10 +2,8 @@ create-symfony-project
 ===
 
 Composer plugin providing command for creating new projects based on Symfony
-framework. This project aims to be an open source alternative for proprietary,
-closed source [`symfony` binary](https://symfony.com/download) and its `new`
-subcommand. It's just simple wrapper around `composer create-project`, similarly
-to `symfony new`. [Symfony release API](https://symfony.com/releases.json)
+framework. This project aims to be an simpler alternative for [`symfony` binary](https://symfony.com/download) and its `new` subcommand. It's just simple wrapper around `composer create-project`,
+similarly to `symfony new`. [Symfony release API](https://symfony.com/releases.json)
 is used to determine version of the framework.
 
 Installation
